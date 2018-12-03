@@ -42,12 +42,13 @@ body {
 
 .header-container {
   background-color: black;
-  background: url('../img/bg.jpg') no-repeat 50% 0;
+  background: url('../img/notebook-2541617_1920.jpg') no-repeat 50% 0;
   color: #fff;
 
   h1 {
-    color: #fff;
+    color: $gray-darker;
   }
+  
   // background-attachment: fixed;
   background-size: cover;
   background-position: center 36%;
