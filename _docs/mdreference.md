@@ -3,154 +3,150 @@ title: Markdown reference example
 permalink: /docs/mdreference/
 ---
 
-[The **Reference** includes all the information users need to know to use your endpoints. That means you'll repeat the information below for each endpoint in your API.
+### Setup a kodou function by url reference
 
-Use this page if you prefer to create Markdown files for your reference. Here's what you'll need to do:
-* Delete the OpenAPI reference example file `/_docs/openapi.md`
-* Delete the code `<li {% if page.sectionid=='docs' %} class="active" {% endif %}><a href="{{ "/docs/openapi/" | prepend: site.baseurl }}">OpenAPI</a></li>` from the file `/_includes/topnav.html`
-* Delete the `- openapi` menu item from the file `/_data/docs.yml`]
 
-### [Retrieve a record]
+#### `POST https://api.kodou.io/library/setup` 
 
-[The heading above should be a very brief description of what the endpoint does.]
+#### Headers
 
-#### HTTP Method and URL
-
-[`GET`, `PUT`, `POST`, or `DELETE` and URL---for example, `GET https://api.payrollrecord.com/timesheet/{employee_id}`]
+X-Consumer-Custom-ID: {your API ID}
 
 #### Parameters
 
-[Table that lists all query and path parameters for the endpoint. If this endpoint has query and path parameters, consider listing them in separate tables---one for path parameters, one for query parameters. If there aren't any parameters for this endpoint, replace the table with "None"]
+None
 
-Name | Type | Description | Required?
----- | ---- | ----------- | ---------
-[Name of parameter] | [Type of parameter] | [Brief description of parameter function. What does it do?] | [Required or Optional]
-[Name of parameter] | [Type of parameter] | [Brief description of parameter function. What does it do?] | [Required or Optional]
-[Name of parameter] | [Type of parameter] | [Brief description of parameter function. What does it do?] | [Required or Optional]
+#### JSON payload
+```
+{
+	url: {kodou function url reference}
+}
+```
 
 #### Example Request
 
-[Code or pseudocode sample of a complete request for this endpoint, including header and body, followed by a table that lists each element in the example request]
-
-Element | Type | Description | Required?
-------- | ---- | ----------- | ---------
-[Element as it appears in request] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents, including default and valid values] | [Required or Optional]
-[Element as it appears in request] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents, including default and valid values] | [Required or Optional]
-[Element as it appears in request] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents, including default and valid values] | [Required or Optional]
+```
+curl --request POST \
+ --header 'X-Consumer-Custom-ID: {your API ID}' \
+ --header "Content-Type: application/json" \
+ --data '{"url":"https://github.com/antirez/redis.git|91685eeeb1462edfc12da2e079e76bdbeec0eddb|redis/src/sds.c|910|hex_digit_to_int"}' \
+ https://api.kodou.io
+```
 
 #### Example Response
 
-[Code or pseudocode sample of a complete response for this endpoint, followed by a table that lists each element in the example response]
+```
+{
+    "sessionid": "eyJ0eXAiO..."
+}
+```
 
 Element | Type | Description
 ------- | ---- | -----------
-[Element as it appears in response] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents]
-[Element as it appears in response] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents]
-[Element as it appears in response] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents]
+`sessionid` | String | sessionid for function calls. When the error field is true the sessionid is valid.
 
 #### Error and Status Codes
 
-[Table that lists all possible error and status codes for this endpoint]
-
 Code | Message | Meaning
 ---- | ------- | -------
-[HTTP or error code] | [Message for the code, such as "Not Found"] | [Brief description of what the code means within your API, such as "We couldn't complete your request right now"]
-[HTTP or error code] | [Message for the code, such as "Not Found"] | [Brief description of what the code means within your API, such as "We couldn't complete your request right now"]
-[HTTP or error code] | [Message for the code, such as "Not Found"] | [Brief description of what the code means within your API, such as "We couldn't complete your request right now"]
+200 | OK | kodou function setup is completed. Return value in JSON payload with a sessionid field
+400 | url format is incorrect. | Couldn't parse the kodou url
+400 | Missing json fields. | Didn't find the kodou url in the JSON payload
+500 | Internal error | The internal kodou.io system failed. Call Customer Support.
 
-### [Add an employee]
+#### Call a kodou function w/ a session id
 
-[The heading above should be a very brief description of what the endpoint does.]
+#### `POST https://api.kodou.io/library/call`
 
-#### HTTP Method and URL
+#### Headers
 
-[`GET`, `PUT`, `POST`, or `DELETE` and URL---for example, `POST https://api.payrollrecord.com/employee`]
+X-Consumer-Custom-ID: {your API ID}
 
 #### Parameters
 
-[Table that lists all query and path parameters for the endpoint. If this endpoint has query and path parameters, consider listing them in separate tables---one for path parameters, one for query parameters. If there aren't any parameters for this endpoint, replace the table with "None"]
-
-Name | Type | Description | Required?
----- | ---- | ----------- | ---------
-[Name or parameter] | [Query or Path] | [Brief description of parameter function. What does it do?] | [Required or Optional]
-[Name or parameter] | [Query or Path] | [Brief description of parameter function. What does it do?] | [Required or Optional]
-[Name or parameter] | [Query or Path] | [Brief description of parameter function. What does it do?] | [Required or Optional]
+None
 
 #### Example Request
 
-[Code or pseudocode sample of a complete request for this endpoint, including header and body, followed by a table that lists each element in the example request]
-
-Element | Type | Description | Required?
-------- | ---- | ----------- | ---------
-[Element as it appears in request] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents, including default and valid values] | [Required or Optional]
-[Element as it appears in request] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents, including default and valid values] | [Required or Optional]
-[Element as it appears in request] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents, including default and valid values] | [Required or Optional]
+```
+curl --request POST \
+ --header 'X-Consumer-Custom-ID: {your API ID}' \
+ --header "Content-Type: application/json" \
+ --data '{"sessionid": {from the Setup call}, "timeout":"20000", "args":{"c": "A"}}'
+ https://api.kodou.io
+```
 
 #### Example Response
 
-[Code or pseudocode sample of a complete response for this endpoint, followed by a table that lists each element in the example response]
+```
+{
+    "return": {
+    	"error": false,
+        "value": "15"
+    }
+}
+```
 
 Element | Type | Description
 ------- | ---- | -----------
-[Element as it appears in response] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents]
-[Element as it appears in response] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents]
-[Element as it appears in response] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents]
+`return` | JSON | Response from kodou function call parent field.
+`error` | Boolean | If `error` is true then function call failed for some reason. 
+`value` | String | If `error` is false then `value` is the return value from the function call.
 
 #### Error and Status Codes
 
-[Table that lists all possible error and status codes for this endpoint]
-
 Code | Message | Meaning
 ---- | ------- | -------
-[HTTP or error code] | [Message for the code, such as "Not Found"] | [Brief description of what the code means within your API, such as "We couldn't complete your request right now"]
-[HTTP or error code] | [Message for the code, such as "Not Found"] | [Brief description of what the code means within your API, such as "We couldn't complete your request right now"]
-[HTTP or error code] | [Message for the code, such as "Not Found"] | [Brief description of what the code means within your API, such as "We couldn't complete your request right now"]
+200 | OK | Function call completed. Return value in JSON payload, an error field is false if call succeeded correctly.
+400 | Internal error | The internal kodou.io system failed. Call Customer Support.
+400 | Unable to complete request because session id doesn't match user id | session Token doesnt match user's session
+500 | Internal error | The internal kodou.io system failed. Call Customer Support.
 
-### [Remove an employee]
+#### Call a kodou function w/ Protocol Buffers arguments w/ a session id 
 
-[The heading above should be a very brief description of what the endpoint does.]
+#### `POST https://api.kodou.io/library/call`
 
-#### HTTP Method and URL
+#### Headers
 
-[`GET`, `PUT`, `POST`, or `DELETE` and URL---for example, `DELETE https://api.payrollrecord.com/employee/{employee_id}`]
+X-Consumer-Custom-ID: {your API ID}
 
 #### Parameters
 
-[Table that lists all query and path parameters for the endpoint. If this endpoint has query and path parameters, consider listing them in separate tables---one for path parameters, one for query parameters. If there aren't any parameters for this endpoint, replace the table with "None"]
-
-Name | Type | Description | Required?
----- | ---- | ----------- | ---------
-[Name or parameter] | [Query or Path] | [Brief description of parameter function. What does it do?] | [Required or Optional]
-[Name or parameter] | [Query or Path] | [Brief description of parameter function. What does it do?] | [Required or Optional]
-[Name or parameter] | [Query or Path] | [Brief description of parameter function. What does it do?] | [Required or Optional]
+None
 
 #### Example Request
 
-[Code or pseudocode sample of a complete request for this endpoint, including header and body, followed by a table that lists each element in the example request]
-
-Element | Type | Description | Required?
-------- | ---- | ----------- | ---------
-[Element as it appears in request] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents, including default and valid values] | [Required or Optional]
-[Element as it appears in request] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents, including default and valid values] | [Required or Optional]
-[Element as it appears in request] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents, including default and valid values] | [Required or Optional]
+```
+curl --request POST \
+ --header 'X-Consumer-Custom-ID: {your API ID}' \
+ --header "Content-Type: application/json" \
+ --data '{"sessionid": {from the Setup call}, "timeout":"20000", "argspb":{Base64 encoded String Protobufs arguments}}}'
+ https://api.kodou.io
+```
 
 #### Example Response
 
-[Code or pseudocode sample of a complete response for this endpoint, followed by a table that lists each element in the example response]
+```
+{
+    "return": {
+    	"error": false,
+        "value": "XXXXX"
+    }
+}
+```
 
 Element | Type | Description
 ------- | ---- | -----------
-[Element as it appears in response] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents]
-[Element as it appears in response] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents]
-[Element as it appears in response] | [Array, Object, String, Integer, or Float] | [Brief description of what information the element represents]
+`return` | JSON | Response from kodou function call parent field.
+`error` | Boolean | If `error` is true then function call failed for some reason. 
+`value` | Base64 Encoded String | If `error` is false then `value` is the return value from the function call Protocol Buffer encoded.
 
 #### Error and Status Codes
 
-[Table that lists all possible error and status codes for this endpoint]
-
 Code | Message | Meaning
 ---- | ------- | -------
-[HTTP or error code] | [Message for the code, such as "Not Found"] | [Brief description of what the code means within your API, such as "We couldn't complete your request right now"]
-[HTTP or error code] | [Message for the code, such as "Not Found"] | [Brief description of what the code means within your API, such as "We couldn't complete your request right now"]
-[HTTP or error code] | [Message for the code, such as "Not Found"] | [Brief description of what the code means within your API, such as "We couldn't complete your request right now"]
+200 | OK | Function call completed. Return value in JSON payload, an error field is false if call succeeded correctly.
+400 | Internal error | The internal kodou.io system failed. Call Customer Support.
+400 | Unable to complete request because session id doesn't match user id | session Token doesnt match user's session
+500 | Internal error | The internal kodou.io system failed. Call Customer Support.
 
