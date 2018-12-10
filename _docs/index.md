@@ -34,7 +34,7 @@ The base URL is api.kodou.io unless otherwise specified. Each user is rate limit
 
 To make API calls you use the kodou.io web UI to set up your account to use either a key or a JWT token. Copy the key/token displayed in the UI and apply it to API https requests. Please keep this key/token private as it represent your account without need for further evidence. Don't share it with other users, and make sure to remove it from any code samples. Tokens can be refreshed with the token refresh button on the kodou.io web UI. Changing the API key will require a call to Customer Support.
 
-All API requests must have the key/token as a header named X-Consumer-Custom-ID. The API key or JWT token expiration is account dependent. 
+All API requests must have the key/token as a header named `X-Consumer-Custom-ID`. The API key or JWT token expiration is account dependent. 
 
 Some kodou.io API calls produce a session ID, a JWT token, to be used in subsequent calls. This token encodes
 the state needed to authenticate the configuration specificied in the original call. The session ID is sent in a `POST` JSON payload.
