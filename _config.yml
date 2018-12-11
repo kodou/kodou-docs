@@ -5,7 +5,7 @@ description: >
   Documentation for kodou.io's API.
 
 baseurl: "/docs" # the subpath of your site, e.g. /blog/
-url: https://kodou.github.io/docs # the base hostname & protocol for your site
+url: https://serene-noyce-37d6d3.netlify.com # the base hostname & protocol for your site
 git_address: https://github.com/kodou/docs
 git_edit_address: https://github.com/kodou/docs/gh-pages
 
