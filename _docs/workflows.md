@@ -3,7 +3,7 @@ title: Workflows
 permalink: /docs/workflows/
 ---
 
-## Setup and Call Workflow
+## Setup and Call
 
 The current version of kodou.io supports the calling of functions after a Setup call to provision the necessary resources. In furture versions, the resources will be dynamically allocated.
 
