@@ -1,5 +1,5 @@
 ---
-title: Markdown reference example
+title: Reference example
 permalink: /docs/mdreference/
 ---
 
