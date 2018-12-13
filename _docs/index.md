@@ -9,9 +9,9 @@ The code you want to write today has probably been written 100X already somewher
 kodou.io is a Software-as-a-Service platform where the software is high-quality code from existing source code repositories. Whether opensource or enterprise code bases, kodou.io decomposes code repositories into the functions
 that comprise them. The functions are available for API calls whenever needed by a user.
 
-**No compiler, no IDE, no dependency management**
+**No Compiler, No IDE, No Dependency Management**
 
-kodou.io isolates all functions into independent artifacts. All that is needed are references to the desired functions.
+kodou.io isolates all functions into independent artifacts. All that is required is a reference to the desired function.
 
 Use the kodou.io web page to search for code using keywords and phrases that describe the code you would like. The results are a list of functions that may have been buried in a repository but are extracted by kodou.io. The choices come from many repositories and across various programming languages. Once a function is selected it is available for API calls. 
 
