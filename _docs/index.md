@@ -9,7 +9,7 @@ The code you want to write today has probably been written 100X already somewher
 kodou.io is a Software-as-a-Service platform where the software is high-quality code from existing source code repositories. Whether opensource or enterprise code bases, kodou.io decomposes code repositories into the functions
 that comprise them. The functions are available for API calls whenever needed by a user.
 
-**No Compiler, No IDE, No Dependency Management**
+**No Compiler, IDE, Dependency Management or Dependency Conflicts**
 
 kodou.io isolates all functions into independent artifacts. All that is required is a reference to the desired function.
 
