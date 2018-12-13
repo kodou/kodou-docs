@@ -23,7 +23,7 @@ The service requires no new skills or tooling from the client. The workflow is
 
 ## Advantages
 
-Notice there is no compiler, IDE, dependency management, or deployment process. This simplicity and power solves many some important problems in modern software engineering. 
+Notice there is no compiler, IDE, deployment process, dependency management, or dependency conflicts. This simplicity and power solves many some important problems in modern software engineering. 
 
 ### No Dependency Conflicts
 
