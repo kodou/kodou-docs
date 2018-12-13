@@ -1,24 +1,34 @@
 ---
-title: About this template
+title: About kodou.io
 permalink: /about/index/
 ---
 
-This minimum API documentation template was developed by James Higginbotham and Hillary Fraley. For information about how to use the template, check out the [MVD-template repo README.md](https://github.com/hillaryfraley/mvd-template).
+kodou.io is a service for ondemand API calls to code in opensource or enterprise code bases. The service creates
+a library of functions extracted from existing code, even functions buried in a repository. 
 
-James provides API strategy, product, and design consulting and training through his company, [LaunchAny](http://launchany.com). He's [jhigginbotham](https://github.com/jhigginbotham) on GitHub.
+## Usage
 
-Hillary is a technical writer. Her website is [www.setcorrect.com](http://www.setcorrect.com), and she's [hillaryfraley](https://github.com/hillaryfraley) on GitHub.
+The Web UI (https://kodou.io) enables clients to search for code using descriptive terms and phrases. The list of search results, ranked by quality, has a (kodou.io) reference url for each entry. The client selects one fo the results and that reference url is stored in the user's profile for future reference.
 
-## Theme
+The API interface (https://api.kodou.io) allows programmable clients to setup and call functions by (kodou.io) url reference.
 
-This Jekyll documentation theme was developed by [Can Güney Aksakalli](https://aksakalli.github.io).
+The clients make an API call to setup a function and then makes calls to the function with arguments. In the future the Setup stage may not be needed. 
 
-The GitHub repo for this documenation theme is [https://github.com/aksakalli/jekyll-doc-theme](https://github.com/aksakalli/jekyll-doc-theme). The demo is at [https://aksakalli.github.io/jekyll-doc-theme/](https://aksakalli.github.io/jekyll-doc-theme/).
+## Workflow
 
-## Jekyll resources
+The service requires no new skills or tooling from the client. The workflow is 
+1. Search for code
+2. Choose a function from the results
+3. Function is ready to be called via API
 
-Jekyll website: [http://jekyllrb.com](http://jekyllrb.com)
+## Advantages
 
-Jekyll on GitHub: [https://github.com/jekyll/jekyll](https://github.com/jekyll/jekyll)
+Notice there is no compiler, IDE, dependency management, or deployment process. This simplicity and power solves many some important problems in modern software engineering. 
 
-Jekyll Talk: [https://talk.jekyllrb.com](https://talk.jekyllrb.com)
+### No Dependency Conflicts
+
+Each function is independent so there are no dependency conflicts. You can compose as many functions as needed.
+
+### Multi-language Platform
+
+kodou.io provides code from many programming languages. Functions from various languages can be composed and called.

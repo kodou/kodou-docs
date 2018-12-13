@@ -19,7 +19,7 @@ None
 #### JSON payload
 ```
 {
-	url: {kodou function url reference}
+	"url": {kodou function url reference}
 }
 ```
 
