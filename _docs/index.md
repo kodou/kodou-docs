@@ -6,15 +6,16 @@ redirect_from: /docs/index.html
 
 The code you want to write today has probably been written 100X already somewhere in opensource or your company's code base. Instead of beginning the software design process and development cycles, why not use the best existing code that has been road-tested, improved over time by many people, and meets your needs. This enables speed of software prototyping, development, and deployment, while using high quality code. 
 
-kodou.io is a Software-as-a-Service platform where the software is high-quality code from existing source code repositories. Whether opensource or enterprise code bases, kodou.io decomposes code repositories into the functions
+kodou.io is a Software-as-a-Service platform where the software is high-quality code from existing source code repositories. Whether open source or enterprise code bases, kodou.io decomposes code repositories into the functions
 that comprise them. The functions are available for API calls whenever needed by a user.
 
 **No Compiler, IDE, Deployment Process, Dependency Management or Dependency Conflicts**
 
-kodou.io isolates all functions into independent artifacts. All that is required is a reference to the desired function.
+kodou.io isolates all functions into independent artifacts, no more dependency conflicts. All that is required is a reference to the desired function.
 
 Use the kodou.io web page to search for code using keywords and phrases that describe the code you would like. The results are a list of functions that may have been buried in a repository but are extracted by kodou.io. The choices come from many repositories and across various programming languages. Once a function is selected it is available for API calls. 
 
+Similarly, kodou.io provides a dependency-level service called an Environment. This enables function calls on a requested set of library dependencies. The functions exposed by the dependencies are available for calls. Again, each Environment is independent, so a client could set up two Environments that normally combined would have dependency conflicts, but are effectively combined (piece-wise) from the client's perspective.
 
 Here are some usage examples
 
@@ -23,7 +24,7 @@ programming language you are not familiar with.
 * You are a software architect and there is an idea you've wanted to explore for a while. The fastest way to do
 so is usin kodou.io to leverage existing code that matches your expectations. You can put together most of the
 code components and begin testing them out without having to first lay down software tooling.
-* There is a series of functions and libraries you want to use together but they require deep dependency handling to combine them. kodou.io allows you to use any combination of code bases since they are all kept independent.
+* There is a series of functions and libraries you want to use together but they require deep dependency handling to combine into an application. kodou.io functions and Environments allows you to use any combination of code bases or libraries since they are all kept independent.
 
 kodou.io uses HTTPS protocols `POST` with Json or Protocol Buffers payloads for requests. Responses are returned in the same formats. 
 
