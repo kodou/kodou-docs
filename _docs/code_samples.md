@@ -17,28 +17,33 @@ The following are a few examples in different languages and approaches.
 
 kodou.io Environments are an API based way to perform function calls on a set of dependencies.
 
-For example, here is the usual way to call a function in a Python program. First import the required dependencies, then call functions and/or build the necessary objects. 
+For example, here is the usual way to call a function in a Python program. 
+
+First, *the numpy package must be installed on the operating system*. In the source code you import the required dependencies, then call functions and/or build the necessary objects. 
 
 ```python
-import numpy, requests
+import numpy
 
 # Sum up the integers in an array
 args = [1,2,3]
 
 # Create the numpy array, specifying ints as the array type. Then call the sum function on the object.
-result = numpy.array(args,int).sum()
+result = numpy.array(args).sum()
 
 ```
 
 A client can perform the above dynamically using the kodou.io API. 
-After an API request specifying the dependencies, any function (supported by the dependencies) can be call over the API.
+After an API request specifying the dependencies, any function (supported by the dependencies) can be call over the API. 
+
+kodou.io API calls replace DevOps and compilers.
 
 The basic kodou.io environment protocol sequence is to specify the dependencies/libraries for the environment, receiving a session id token in response, and using the session id when making function calls. 
 
 Every function called must be exported by a library in the dependency set, aka. environment. The functions are identified with the explicit name sequence starting with the module name, and followed by each subsequent attribute name. This is called the name-path-array, a descriptive form of the usual dot-separated way we write object attribute references in code. 
 
 ### Environment Setup
-For all calls the default endpoint, api.kodoi.io, is assumed. 
+For all calls the default endpoint, api.kodoi.io, is assumed.
+
 You need to provide your API id, supplied by kodou.io, as a custom field, X-Consumer-Custom-ID. Json payloads are used for the protocol's data. The examples in this section can be used with PostMan.
 
 Below, set up a Python 3 environment with a set of Python packages available on pypi.org.
@@ -61,24 +66,106 @@ The response will be a Json object with a "sessionid" field, assuming no error.
 ### Environment Function Call
 The Setup call, if successful, will return a Json object with a "sessionid" token field. To make a function call, use the "/environment/python/call" path, the "X-Consumer-Custom-ID" header is also required. The function call is defined by the Json payload, including the "sessionid", function arguments, and other fields.
 
-```
-POST /environment/python/call 
-X-Consumer-Custom-ID:XXXXXXXXXX  
+A function name is expressed explicitly as a name-path-array which represents the usual dot-separated class attribute expression found in code. All function name-paths must include the module name followed by a class and/or sequence of function names. Optional arguments can be icluded in the case of object contsruction or intermediate function calls.
+```json
 {
- 	"sessionid": "eyJ0eXAi.....",
-    "timeout":"20000",
-    "namepatharray":{
-    	"moduleName":"numpy",
-    	"path":[
-    		{"name":"array","args": [ "[2,4,6]","\"int\"" ]},
-    		{"name":"sum"}
+ "namepatharray" : {
+	"moduleName":"moduleNameX", 
+	"path": [
+		 {"name":"classX","args":["optionalX"]}, 
+		 {"name":"functionX or __init__","args":["optionalX"]}
+		]
+	},
+ "args": ["optionalX", ["optionalY"], {"optionalZ":{}}]
+}
+```
+For example, below we want to sum an array of values with the desired function numpy.array(xxxxx).sum():
+```http
+POST /environment/python/call HTTPS/1.1
+X-Consumer-Custom-ID: XXXXXXXXXX
+Content-Type: application/json; charset=utf-8  
+
+{
+  "sessionid": "eyJ0eXAi.....",
+  "timeout": "20000",
+  "namepatharray": {
+    	"moduleName": "numpy",
+    	"path": [
+    		 {"name": "array","args": [ "[2,4,6]" ]},
+    		 {"name": "sum"}
     		]
-    },
-    "args": []
+    	},
+  "args": []
 }
 ```
 
-## Generic ICE Example
+### Environment Pipe Calls
+Like found in Unix, piping the output from one function to the next is very useful. 
+
+A pipe-chain is a list order or reverse of bash pipe order
+
+```json
+{
+ "pipechain" : [
+	{
+  	"moduleName":"moduleNameX",
+  	"path": [
+  		 {"name":"classX","args":["optionalX"]}, 
+		 {"name":"functionX or __init__","args":["optionalX"]}
+		]
+	}
+	],
+ "args": ["optionalX", {"optionalY":{}}]
+}
+```
+
+### Programming Examples
+
+Sometimes code examples are clearer or simpler to understand than protocol formats.
+
+Here is kodou.io usage from Python:
+
+```python
+import requests
+
+setup_url = 'https://api.kodou.io/environment/python/setup'
+call_url = 'https://api.kodou.io/environment/python/call'
+
+id_header = {"X-Consumer-Custom-ID":"XXXXXXXXXX"}
+
+# setup a kodou.io Environment with numpy
+setup_json = {"version":"3", dependencies:["numpy"]}
+
+# call numpy.array([1,2,3], int).sum()
+call_json = 
+{
+"timeout":"20000",
+"namepatharray":{ 
+	"moduleName":"numpy",
+	"path":[
+   		{"name":"array","args": [ [2,4,6] ]},
+   		{"name":"sum"}
+   	]
+   },
+"args": [] # No arguments for the function
+}
+	
+setup_resp = requests.post(setup_url, headers=id_header, json=setup_json)
+
+if setup_resp.code == 200:
+	sessionid = set_resp.json().sessionid
+
+ 	call_json["sessionid"] = sessionid
+
+	call_resp = requests.post(call_url, headers=id_header, json=call_json)
+
+	if call_resp.code == 200 and call_resp.json().error == False:
+		result = call_resp.json().value
+
+		print("Answer is " + result)
+```
+
+## Generic Function (ICE) Example
 
 The basic kodou.io ICE protocol sequence is to setup the function you want to call, receiving a session id token in response, and using the session id when making calls with function arguments. 
 
