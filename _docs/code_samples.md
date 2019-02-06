@@ -66,10 +66,10 @@ The response will be a Json object with a "sessionid" field, assuming no error.
 ### Environment Function Call
 The Setup call, if successful, will return a Json object with a "sessionid" token field. To make a function call, use the "/environment/python/call" path, the "X-Consumer-Custom-ID" header is also required. The function call is defined by the Json payload, including the "sessionid", function arguments, and other fields.
 
-A function name is expressed explicitly as a name-path-array which represents the usual dot-separated class attribute expression found in code. All function name-paths must include the module name followed by a class and/or sequence of function names. Optional arguments can be icluded in the case of object contsruction or intermediate function calls.
+A function name is expressed explicitly as a name-path which represents the usual dot-separated class attribute expression found in code. All function name-paths must include the module name followed by a class and/or sequence of function names. Optional arguments can be icluded in the case of object contsruction or intermediate function calls.
 ```json
 {
- "namepatharray" : {
+ "namepath" : {
 	"moduleName":"moduleNameX", 
 	"path": [
 		 {"name":"classX","args":["optionalX"]}, 
@@ -88,7 +88,7 @@ Content-Type: application/json; charset=utf-8
 {
   "sessionid": "eyJ0eXAi.....",
   "timeout": "20000",
-  "namepatharray": {
+  "namepath": {
     	"moduleName": "numpy",
     	"path": [
     		 {"name": "array","args": [ "[2,4,6]" ]},
@@ -99,23 +99,80 @@ Content-Type: application/json; charset=utf-8
 }
 ```
 
-### Environment Pipe Calls
-Like found in Unix, piping the output from one function to the next is very useful. 
+### Environment Pipe Call
+Like the pipe (|) mechanism found in Unix, piping the output from one function to the next is very useful. 
 
-A pipe-chain is a list order or reverse of bash pipe order
+Pipes can be constructed for a single session, utilizing functions in an existing dependency set, or distributed across multiple sessions. There are two types of pipe:
+
+1. Pipeline 
+  * Functions in a single session, assumed to run on the same VM.
+2. Pipes 
+  * Functions in a multi-session construction, fully distributed messaging.
+
+A pipes specification includes a sessionid for each function stage. It is a list order sequence of cuntion calls (or the reverse of a bash pipe command). The head of the list receives the "args" arguments.
 
 ```json
 {
- "pipechain" : [
+ "args": ["optionalX", {"optionalY":{}}],
+ "pipes" : [
+ 	{"session": "sessionidFirst",
+ 	 "pipeline": [
+		{
+	  	"moduleName":"moduleName",
+	  	"path": [
+	  		 {"name":"classX","args":["optionalX"]}, 
+			 {"name":"functionX or __init__","args":["optionalX"]}
+			]
+		},
+		{
+	  	"moduleName":"moduleName",
+	  	"path": [
+	  		 {"name":"classY","args":["optionalX"]}, 
+			 {"name":"functionY or __init__","args":["optionalX"]}
+			]
+		},
+		{
+	  	"moduleName":"moduleNameNext",
+	  	"path": [
+	  		 {"name":"classZ","args":["optionalX"]}, 
+			 {"name":"functionZ or __init__","args":["optionalX"]}
+			]
+		}
+		]
+ 	},
+ 	{}
+ ]
+}
+```
+
+A pipeline is a list order sequence of function calls or the reverse of bash pipe order. The head of the list is the first function call and receives the "args" arguments.
+
+```json
+{
+ "args": ["optionalX", {"optionalY":{}}],
+ "pipeline" : [
 	{
-  	"moduleName":"moduleNameX",
+  	"moduleName":"moduleNameFirst",
   	"path": [
   		 {"name":"classX","args":["optionalX"]}, 
 		 {"name":"functionX or __init__","args":["optionalX"]}
 		]
+	},
+	{
+  	"moduleName":"moduleNameSecond",
+  	"path": [
+  		 {"name":"classY","args":["optionalX"]}, 
+		 {"name":"functionY or __init__","args":["optionalX"]}
+		]
+	},
+	{
+  	"moduleName":"moduleNameNext",
+  	"path": [
+  		 {"name":"classZ","args":["optionalX"]}, 
+		 {"name":"functionZ or __init__","args":["optionalX"]}
+		]
 	}
-	],
- "args": ["optionalX", {"optionalY":{}}]
+	]
 }
 ```
 
@@ -136,11 +193,11 @@ id_header = {"X-Consumer-Custom-ID":"XXXXXXXXXX"}
 # setup a kodou.io Environment with numpy
 setup_json = {"version":"3", dependencies:["numpy"]}
 
-# call numpy.array([1,2,3], int).sum()
+# call numpy.array( [1,2,3] ).sum()
 call_json = 
 {
 "timeout":"20000",
-"namepatharray":{ 
+"namepath":{ 
 	"moduleName":"numpy",
 	"path":[
    		{"name":"array","args": [ [2,4,6] ]},
