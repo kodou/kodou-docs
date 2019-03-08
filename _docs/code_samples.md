@@ -63,6 +63,20 @@ The response will be a Json object with a "sessionid" field, assuming no error.
 }
 ```
 
+### Note: namepath format
+A function reference is typically some sort of module or class import statement as a preamble to the name reference. Object-oriented languages allow instance functions which require instantiation before function invocation. This
+looks like a dot path, for example in Java, `new Integer("200).compareTo(100)`, instantiates the object with an argument and calls the `compareTo` function expecting a single argument. Our system supports function specification of both static and instance functions with a "namepath" array format where the dot is substituted by array commas and each class attribute is a String quoted name. This is a Json array (`[ , , ]`) of a sequence of objects with names and optional arguments (`{ "name": xxxx, "args": [ , ,]}`). 
+Notice that arguments are always arrays, a single argument is an array of one item.
+For example, if we wanted to create an `Integer` object in Java and call the `compareTo` function with another argument we would make the following namepath.
+```json
+[ {"name": "Integer", "args": [ "200" ]}, {"name": "compareTo"} ]
+```
+The first namepath array element is an object with the class/constructor `"name"` attribute and the `"args"` attribute is an array of the single constructor `String` argument. The next object is the `"name"` attribute only since this is a function reference and not a function call.
+Finally, we provide a shortcut for static method calls, i.e., no arguments in the namepath. Simply provide an array of `String` names. For example, the Java static function to convert a `String` to an `Integer` is `Integer.decode(String number)`. The namepath shortcut is :
+```json
+[ "Integer", "decode"]
+```
+
 ### Environment Function Call
 The Setup call, if successful, will return a Json object with a "sessionid" token field. To make a function call, use the "/environment/python/call" path, the "X-Consumer-Custom-ID" header is also required. The function call is defined by the Json payload, including the "sessionid", function arguments, and other fields.
 
@@ -175,6 +189,37 @@ A pipeline is a list order sequence of function calls or the reverse of bash pip
 	]
 }
 ```
+
+### Environment List Processing
+List processing is a fundamental computing operation. In addition to defining a list, and an operation such as `map`
+or `filter`, a function from the code environment is specified to be applied by the operation to each list item.
+
+```json
+{
+	"listop": {
+		"op": "operation",
+		"function": [
+			{"name":"classX", "args":["optionalX"]},
+			{"name":"functionX"}
+			],
+		"list": [ , , , [ {"name":"classY", "args":["optionalY"]}, {"name":"functionY"}]]
+	}
+}
+```
+
+Json data types are well-defined in a language like Python. Json is a weakly-defined type system under typed language implementations. So a type must be applied to list elements with a constructor function. The constructor is found at the last position in the list (as seen in the above example). 
+We interpret Json numeric literals as `int` or `float` for typed languages to help simplify constructor usage.
+if the list items are arrays, a constructor is required as the last item (maybe use an identity function) to meet the expected format. In the following Java example, we construct `Integer` objects from the `int` default type of the list elements.
+
+```json
+{
+	"listop": {
+		"op": "map",
+		"function": "Integer.bitCount",
+		"list": [1,3,5,7]
+}
+```
+
 
 ### Programming Examples
 
