@@ -63,8 +63,8 @@ The response will be a Json object with a "sessionid" field, assuming no error.
 }
 ```
 
-### Note: namepath format
-A function reference is typically some sort of module or class import statement as a preamble to the name reference. Object-oriented languages allow instance functions which require instantiation before function invocation. This
+#### Note: namepath format
+A function reference is typically some sort of module or class import statement as a preamble to the name reference. Object-oriented languages allow instance functions which require instantiation before function invocation.  In JavaScript this is called a Cascade. This
 looks like a dot path, for example in Java, `new Integer("200).compareTo(100)`, instantiates the object with an argument and calls the `compareTo` function expecting a single argument. Our system supports function specification of both static and instance functions with a "namepath" array format where the dot is substituted by array commas and each class attribute is a String quoted name. This is a Json array (`[ , , ]`) of a sequence of objects with names and optional arguments (`{ "name": xxxx, "args": [ , ,]}`). 
 Notice that arguments are always arrays, a single argument is an array of one item.
 For example, if we wanted to create an `Integer` object in Java and call the `compareTo` function with another argument we would make the following namepath.
@@ -80,7 +80,7 @@ Finally, we provide a shortcut for static method calls, i.e., no arguments in th
 ### Environment Function Call
 The Setup call, if successful, will return a Json object with a "sessionid" token field. To make a function call, use the "/environment/python/call" path, the "X-Consumer-Custom-ID" header is also required. The function call is defined by the Json payload, including the "sessionid", function arguments, and other fields.
 
-A function name is expressed explicitly as a name-path which represents the usual dot-separated class attribute expression found in code. All function name-paths must include the module name followed by a class and/or sequence of function names. Optional arguments can be icluded in the case of object contsruction or intermediate function calls.
+A function name is expressed explicitly as a "namepath" which represents the usual dot-separated class attribute expression found in code. All function "namepaths" must include the module name followed by a class and/or sequence of function names. Optional arguments can be included in the case of object construction or intermediate function calls.
 ```json
 {
  "namepath" : {
@@ -112,6 +112,44 @@ Content-Type: application/json; charset=utf-8
   "args": []
 }
 ```
+
+#### Note: Json "args" and "tuple" typed arguments
+We showed how to reference a function in a Python environment, however, we also need to address how to send the arguments.
+
+There are 3 ways to send arguments via the API. The differences are due to type specification scheme.
+
+1. Protcol Buffer specification of arguments types in order.
+2. "args" field is an array of Json values.  
+3. "tuple" field is a set of string-to-type value functions.
+
+A Protocol Buffer payload can be sent as arguments to a function call. 
+
+Json has a weak type specification that translates directly in some scripted languages (Python) but is
+problematic in richly-typed languages (Java). The `"args"` field is an array of Json values `{"args": [ 1 2 3 ]}` in function argument order. Use `"args"` when Json types are sufficient.
+
+Json values can be converted to language-specific typed arguments using the `"tuple"` specification. A tuple is a set of Json objects, each object is a single key-value pair. The object key is the string representation of the argument and the corresponding value is a function "namepath".  
+
+```json
+{"tuple": [ {"argument1": ["namepathZ", "namepathY"] }, {"argument2": ["namepathX", "namepathY"] } ]}
+
+{
+	"sessionid": "eyJ0eXAi.....",
+  	"timeout": "20000",
+  	"namepath": {
+    	"moduleName": "numpy",
+    	"path": [
+    		 {"name": "array","args": [ "[2,4,6]" ]},
+    		 {"name": "sum"}
+    		]
+    	},
+	"tuple": [ {"1": ["Long", "parseLong"]}, {"2": ["Long", "parseLong"]} ]
+}
+```
+
+In the specific example above we created a 2 parameter tuple, each of type Long by specifying the argument value as a string key, and the type as a "namepath" of a function to convert the string to a Long. Again, a tuple is
+an array of single-field objects in function argument order. 
+
+The Json specification allows for duplicate field names in objects. So we can specify any string value, even duplicates as arguments.
 
 ### Environment Pipe Call
 Like the pipe (|) mechanism found in Unix, piping the output from one function to the next is very useful. 
@@ -207,7 +245,7 @@ or `filter`, a function from the code environment is specified to be applied by 
 }
 ```
 
-Json data types are well-defined in a language like Python. Json is a weakly-defined type system under typed language implementations. So a type must be applied to list elements with a constructor function. The constructor is found at the last position in the list (as seen in the above example). 
+Json data types are well-defined in a language like Python. Json has a weakly-defined type system under typed language implementations. So a type must be applied to list elements with a constructor function. The constructor is found at the last position in the list (as seen in the above example). An additional restriction is that elements in a Json array with a constructor must all be the same type.
 We interpret Json numeric literals as `int` or `float` for typed languages to help simplify constructor usage.
 if the list items are arrays, a constructor is required as the last item (maybe use an identity function) to meet the expected format. In the following Java example, we construct `Integer` objects from the `int` default type of the list elements.
 

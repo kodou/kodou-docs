@@ -21,10 +21,10 @@ Here are some usage examples
 
 * You want to use the best encryption code but you don't know where to find it or the best is written in another programming language. kodou.io enables you find and call the most highly regarded encryption code even it is in a
 programming language you are not familiar with.
-* You are a software architect and there is an idea you've wanted to explore for a while. The fastest way to do
-so is usin kodou.io to leverage existing code that matches your expectations. You can put together most of the
+* You are a software architect and there is an idea you've wanted to explore for a while. A fast way to do
+so is using kodou.io to leverage existing code that matches your expectations. You can put together most of the
 code components and begin testing them out without having to first lay down software tooling.
-* There is a series of functions and libraries you want to use together but they require deep dependency handling to combine into an application. kodou.io functions and Environments allows you to use any combination of code bases or libraries since they are all kept independent.
+* There is a series of functions and libraries you want to use together but they require deep dependency handling to combine into an application. kodou.io functions and Environments allow you to use any combination of code bases or libraries since they are all kept independent.
 
 kodou.io uses HTTPS protocols `POST` with Json or Protocol Buffers payloads for requests. Responses are returned in the same formats. 
 

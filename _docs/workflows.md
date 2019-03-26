@@ -5,7 +5,7 @@ permalink: /docs/workflows/
 
 ## Setup and Call
 
-The current version of kodou.io supports the calling of functions after a Setup call to provision the necessary resources. In furture versions, the resources will be dynamically allocated.
+The current version of kodou.io supports the calling of functions after a Setup call to provision the necessary resources. In future versions, the resources will be dynamically allocated.
 
 kodou.io has a web UI for user account management and to search for code. The user types in keywords and phrases to identify the functions they want to find and use. The search page returns a list of results is indexed with unique urls. Once the user selects one of the functions it is stored in their account for convenience. The url serves as the reference for the function used in kodou.io API calls. 
 

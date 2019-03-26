@@ -21,6 +21,8 @@ The service requires no new skills or tooling from the client. The workflow is
 2. Choose a function from the results
 3. Function is ready to be called via API
 
+If you already know what you want, simply send an API request for the code Environment, and the functions are ready to be called via API.
+
 ## Advantages
 
 Notice there is no compiler, IDE, deployment process, dependency management, or dependency conflicts. This simplicity and power solves many some important problems in modern software engineering. 
