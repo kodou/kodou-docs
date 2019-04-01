@@ -64,8 +64,8 @@ The response will be a Json object with a "sessionid" field, assuming no error.
 ```
 
 #### Note: namepath format
-A function reference is typically some sort of module or class import statement as a preamble to the name reference. Object-oriented languages allow instance functions which require instantiation before function invocation.  In JavaScript this is called a Cascade. This
-looks like a dot path, for example in Java, `new Integer("200).compareTo(100)`, instantiates the object with an argument and calls the `compareTo` function expecting a single argument. Our system supports function specification of both static and instance functions with a "namepath" array format where the dot is substituted by array commas and each class attribute is a String quoted name. This is a Json array (`[ , , ]`) of a sequence of objects with names and optional arguments (`{ "name": xxxx, "args": [ , ,]}`). 
+A function reference is typically some sort of module or class import statement as a preamble to the name reference. This sequence of unique names, module name followed by class or function name is what we call a "namepath".  In JavaScript this is called a Cascade. 
+"namepath" looks like a dot path, for example in Java, `new Integer("200).compareTo(100)`, instantiates the object with an argument and calls the `compareTo` function expecting a single argument. Our system supports function specification of both static and instance functions with a "namepath" array format where the dot is substituted by array commas (`[ , , ]`) and each class attribute is a String quoted name. This is a sequence of objects with names and optional arguments (`{ "name": xxxx, "args": [ , ,]}`). 
 Notice that arguments are always arrays, a single argument is an array of one item.
 For example, if we wanted to create an `Integer` object in Java and call the `compareTo` function with another argument we would make the following namepath.
 ```json
@@ -83,13 +83,11 @@ The Setup call, if successful, will return a Json object with a "sessionid" toke
 A function name is expressed explicitly as a "namepath" which represents the usual dot-separated class attribute expression found in code. All function "namepaths" must include the module name followed by a class and/or sequence of function names. Optional arguments can be included in the case of object construction or intermediate function calls.
 ```json
 {
- "namepath" : {
-	"moduleName":"moduleNameX", 
-	"path": [
-		 {"name":"classX","args":["optionalX"]}, 
-		 {"name":"functionX or __init__","args":["optionalX"]}
-		]
-	},
+ "namepath" : [
+	{"moduleName":"moduleNameX", },
+	{"name":"classX","args":["optionalX"]}, 
+	{"name":"functionX or __init__","args":["optionalX"]}
+	],
  "args": ["optionalX", ["optionalY"], {"optionalZ":{}}]
 }
 ```
@@ -102,49 +100,55 @@ Content-Type: application/json; charset=utf-8
 {
   "sessionid": "eyJ0eXAi.....",
   "timeout": "20000",
-  "namepath": {
-    	"moduleName": "numpy",
-    	"path": [
-    		 {"name": "array","args": [ "[2,4,6]" ]},
-    		 {"name": "sum"}
-    		]
-    	},
+  "namepath": [
+    	{"moduleName": "numpy"},
+    	{"name": "array","args": [ "[2,4,6]" ]},
+    	{"name": "sum"}	
+    	],
   "args": []
 }
 ```
 
 #### Note: Json "args" and "tuple" typed arguments
-We showed how to reference a function in a Python environment, however, we also need to address how to send the arguments.
+We showed how to reference a function in a Python environment, however, we also need to address the options for sending the arguments.
 
 There are 3 ways to send arguments via the API. The differences are due to type specification scheme.
 
 1. Protcol Buffer specification of arguments types in order.
-2. "args" field is an array of Json values.  
-3. "tuple" field is a set of string-to-type value functions.
+2. "args" field, an array of Json values.  
+3. "tuple" field, type specification of arguments via conversion functions.
 
 A Protocol Buffer payload can be sent as arguments to a function call. 
 
 Json has a weak type specification that translates directly in some scripted languages (Python) but is
 problematic in richly-typed languages (Java). The `"args"` field is an array of Json values `{"args": [ 1 2 3 ]}` in function argument order. Use `"args"` when Json types are sufficient.
 
-Json values can be converted to language-specific typed arguments using the `"tuple"` specification. A tuple is a set of Json objects, each object is a single key-value pair. The object key is the string representation of the argument and the corresponding value is a function "namepath".  
+Json values can be converted to language-specific typed arguments using the `"tuple"` specification. Each tuple specifies a raw value and either a language-specific type or a function that converts the value to a type, the function return type. A tuple is a set of typed arguments defined using an array of Json objects. We embed the specification in regular Json, that is the reason for the format.
+
+Tuple can be used anywhere an `"args"` is used.
+
+Generally, tuple is useful when you want to set the arguments types seperately from the composition of functions that make up your code. Otherwise, you would have to include type conversion in your function compositions, muddying the meaning of your algorithms.
+
+There are two kinds of tuples, value conversion and array conversion. A tuple is an function arguments-ordered sequence of objects. Each object is a single key-value pair, specified with a `"value"`,`"type"` pair or an `"array"`,`"type"` pair. The value or array are valid Json values. The type is a language-specific type namepath, however, without arguments, simply a sequence of strings which make up the unique identifier of the function. 
 
 ```json
-{"tuple": [ {"argument1": ["namepathZ", "namepathY"] }, {"argument2": ["namepathX", "namepathY"] } ]}
+{"tuple": [ {"value": _, "type": ["namepathX", "language-specific type or class"]}, ...]}
+{"tuple": [ {"array": [_,_,_], "type": ["namepathY", "array-element-to-type conversion function"]}]}
+	or for convenience
+{"tuple": [ {"string_argument1": ["namepathZ", "string-to-type function_name"] }, {"string_argument1": ["namepathA", "requested-type"] } ]}
 
 {
 	"sessionid": "eyJ0eXAi.....",
   	"timeout": "20000",
-  	"namepath": {
-    	"moduleName": "numpy",
-    	"path": [
-    		 {"name": "array","args": [ "[2,4,6]" ]},
-    		 {"name": "sum"}
-    		]
-    	},
+  	"namepath": [
+    	{"moduleName": "numpy"},
+    	{"name": "array","args": [ "[2,4,6]" ]},
+    	{"name": "sum"}	
+    	],
 	"tuple": [ {"1": ["Long", "parseLong"]}, {"2": ["Long", "parseLong"]} ]
 }
 ```
+As a convenience, a compact form of tuple is allowed using a string value as the object key and the argument-free namepath. The namepath can be interpreted as a function which takes a string and returns a typed value. Or, the namepath is the requested language-specific type conversion. The default language-specific string-to-type operation will be requested, so this may fail at runtime.
 
 In the specific example above we created a 2 parameter tuple, each of type Long by specifying the argument value as a string key, and the type as a "namepath" of a function to convert the string to a Long. Again, a tuple is
 an array of single-field objects in function argument order. 
@@ -169,28 +173,22 @@ A pipes specification includes a sessionid for each function stage. It is a list
  "pipes" : [
  	{"session": "sessionidFirst",
  	 "pipeline": [
-		{
-	  	"moduleName":"moduleName",
-	  	"path": [
-	  		 {"name":"classX","args":["optionalX"]}, 
-			 {"name":"functionX or __init__","args":["optionalX"]}
-			]
-		},
-		{
-	  	"moduleName":"moduleName",
-	  	"path": [
-	  		 {"name":"classY","args":["optionalX"]}, 
-			 {"name":"functionY or __init__","args":["optionalX"]}
-			]
-		},
-		{
-	  	"moduleName":"moduleNameNext",
-	  	"path": [
-	  		 {"name":"classZ","args":["optionalX"]}, 
-			 {"name":"functionZ or __init__","args":["optionalX"]}
-			]
-		}
+	  	[
+	  		{"moduleName":"moduleName"},
+	  		{"name":"classX","args":["optionalX"]}, 
+			{"name":"functionX or __init__","args":["optionalX"]}
+		],
+		[
+			{"moduleName":"moduleName"},
+	  		{"name":"classY","args":["optionalX"]}, 
+			{"name":"functionY or __init__","args":["optionalX"]}
+		],
+		[
+	  		{"moduleName":"moduleNameNext"},
+	  		{"name":"classZ","args":["optionalX"]}, 
+			{"name":"functionZ or __init__","args":["optionalX"]}
 		]
+	  ]
  	},
  	{}
  ]
@@ -203,28 +201,22 @@ A pipeline is a list order sequence of function calls or the reverse of bash pip
 {
  "args": ["optionalX", {"optionalY":{}}],
  "pipeline" : [
-	{
-  	"moduleName":"moduleNameFirst",
-  	"path": [
-  		 {"name":"classX","args":["optionalX"]}, 
-		 {"name":"functionX or __init__","args":["optionalX"]}
-		]
-	},
-	{
-  	"moduleName":"moduleNameSecond",
-  	"path": [
-  		 {"name":"classY","args":["optionalX"]}, 
-		 {"name":"functionY or __init__","args":["optionalX"]}
-		]
-	},
-	{
-  	"moduleName":"moduleNameNext",
-  	"path": [
-  		 {"name":"classZ","args":["optionalX"]}, 
-		 {"name":"functionZ or __init__","args":["optionalX"]}
-		]
-	}
+	[
+  		{"moduleName":"moduleNameFirst"},
+  		{"name":"classX","args":["optionalX"]}, 
+		{"name":"functionX or __init__","args":["optionalX"]}
+	],
+	[
+  		{"moduleName":"moduleNameSecond"},
+  		{"name":"classY","args":["optionalX"]}, 
+		{"name":"functionY or __init__","args":["optionalX"]}
+	],
+	[
+  	{"moduleName":"moduleNameNext"},
+  	{"name":"classZ","args":["optionalX"]}, 
+	{"name":"functionZ or __init__","args":["optionalX"]}
 	]
+  ]
 }
 ```
 
@@ -280,13 +272,11 @@ setup_json = {"version":"3", dependencies:["numpy"]}
 call_json = 
 {
 "timeout":"20000",
-"namepath":{ 
-	"moduleName":"numpy",
-	"path":[
-   		{"name":"array","args": [ [2,4,6] ]},
-   		{"name":"sum"}
-   	]
-   },
+"namepath":[
+	{"moduleName":"numpy"},
+   	{"name":"array","args": [ [2,4,6] ]},
+   	{"name":"sum"}
+   ],
 "args": [] # No arguments for the function
 }
 	

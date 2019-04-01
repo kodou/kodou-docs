@@ -40,7 +40,9 @@ The response will be a Json object with a `sessionid` field.
 
 2. Send a request to the `POST` https://api.kodou.io/library/call endpoint.
 
-The function calls will require the X-Consumer-Custom-ID header and a Json payload with the `sessionid` field, a `timeout` field, and an `args` field, a sub-object with the function arguments as fields.
+The function calls will require the X-Consumer-Custom-ID header and a Json payload with the `sessionid` field, a `timeout` field, and an `args` field, a sub-object with the function arguments as fields. 
+
+Protocol Buffers (PB) can be used for arguments as well with the https://api.kodou.io/library/callpb endpoint.
 
 The `sessionid` value serves as a proxy for the function url in the Setup phase. Call this function using the `library/call` API. The call includes the 'X-Consumer-Custom-ID' header, and a Json payload with the `sessionid`, a `timeout` value, and an object named `args` of the function arguments. In the example below, `...hex_digit_to_int` accetps one argument named `c` and returns an integer.
 
