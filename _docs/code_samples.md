@@ -65,14 +65,17 @@ The response will be a Json object with a "sessionid" field, assuming no error.
 
 #### Note: namepath format
 A function reference is typically some sort of module or class import statement as a preamble to the name reference. This sequence of unique names, module name followed by class or function name is what we call a "namepath".  In JavaScript this is called a Cascade. 
-"namepath" looks like a dot path, for example in Java, `new Integer("200).compareTo(100)`, instantiates the object with an argument and calls the `compareTo` function expecting a single argument. Our system supports function specification of both static and instance functions with a "namepath" array format where the dot is substituted by array commas (`[ , , ]`) and each class attribute is a String quoted name. This is a sequence of objects with names and optional arguments (`{ "name": xxxx, "args": [ , ,]}`). 
-Notice that arguments are always arrays, a single argument is an array of one item.
+"namepath" looks like a dot path, for example in Java, `new Integer("200).compareTo(100)`, instantiates the object with an argument and calls the `compareTo` function expecting a single argument. 
+
+Our system supports function specification of both static and instance functions with a "namepath" array format where the dot is substituted by array commas (`[ , , ]`) and each class attribute is a string quoted name. This is a sequence of objects with names and optional arguments (`{ "name": xxxx, "args": [ , ,]}`). 
+Notice the arguments are in an array, and a single argument is an array of one item.
 For example, if we wanted to create an `Integer` object in Java and call the `compareTo` function with another argument we would make the following namepath.
 ```json
 [ {"name": "Integer", "args": [ "200" ]}, {"name": "compareTo"} ]
 ```
-The first namepath array element is an object with the class/constructor `"name"` attribute and the `"args"` attribute is an array of the single constructor `String` argument. The next object is the `"name"` attribute only since this is a function reference and not a function call.
-Finally, we provide a shortcut for static method calls, i.e., no arguments in the namepath. Simply provide an array of `String` names. For example, the Java static function to convert a `String` to an `Integer` is `Integer.decode(String number)`. The namepath shortcut is :
+The first namepath array element is an object with the class/constructor `"name"` attribute and the `"args"` attribute is an array of the single constructor string argument. The next object is the `"name"` attribute only since this is a function reference and not a function call.
+
+Finally, we provide a shortcut for static method calls, i.e., no arguments in the namepath. Simply provide an array of string names. For example, the Java static function to convert a string to an `Integer` is `Integer.decode(String number)`. The namepath shortcut is :
 ```json
 [ "Integer", "decode"]
 ```
@@ -80,18 +83,18 @@ Finally, we provide a shortcut for static method calls, i.e., no arguments in th
 ### Environment Function Call
 The Setup call, if successful, will return a Json object with a "sessionid" token field. To make a function call, use the "/environment/python/call" path, the "X-Consumer-Custom-ID" header is also required. The function call is defined by the Json payload, including the "sessionid", function arguments, and other fields.
 
-A function name is expressed explicitly as a "namepath" which represents the usual dot-separated class attribute expression found in code. All function "namepaths" must include the module name followed by a class and/or sequence of function names. Optional arguments can be included in the case of object construction or intermediate function calls.
+A function name is expressed explicitly as a "namepath" which represents the usual dot-separated class attribute expression found in code. All function "namepaths" must include the toplevel/module name followed by a class and/or sequence of function names. Optional arguments can be included in the case of object construction or intermediate function calls.
 ```json
 {
  "namepath" : [
-	{"moduleName":"moduleNameX", },
+	{"moduleName":"moduleNameX"},
 	{"name":"classX","args":["optionalX"]}, 
 	{"name":"functionX or __init__","args":["optionalX"]}
 	],
  "args": ["optionalX", ["optionalY"], {"optionalZ":{}}]
 }
 ```
-For example, below we want to sum an array of values with the desired function numpy.array(xxxxx).sum():
+For example, below we want to sum an array of values with the desired function `numpy.array(xxxxx).sum()`:
 ```http
 POST /environment/python/call HTTPS/1.1
 X-Consumer-Custom-ID: XXXXXXXXXX
@@ -108,6 +111,7 @@ Content-Type: application/json; charset=utf-8
   "args": []
 }
 ```
+The `"moduleName"` key is not required as the first object key, `"name"` can also be used. Python environments may find it helpful to use `"moduleName"`.
 
 #### Note: Json "args" and "tuple" typed arguments
 We showed how to reference a function in a Python environment, however, we also need to address the options for sending the arguments.
@@ -125,15 +129,15 @@ problematic in richly-typed languages (Java). The `"args"` field is an array of 
 
 Json values can be converted to language-specific typed arguments using the `"tuple"` specification. Each tuple specifies a raw value and either a language-specific type or a function that converts the value to a type, the function return type. A tuple is a set of typed arguments defined using an array of Json objects. We embed the specification in regular Json, that is the reason for the format.
 
-Tuple can be used anywhere an `"args"` is used.
+Currently, tuple cannot be used in a namepath. This will change in the future.
 
-Generally, tuple is useful when you want to set the arguments types seperately from the composition of functions that make up your code. Otherwise, you would have to include type conversion in your function compositions, muddying the meaning of your algorithms.
+Generally, tuple is useful when you want to set the arguments types separately from the composition of functions that make up your code. Otherwise, you would have to include type conversion in your function compositions, muddying the meaning of your algorithms.
 
-There are two kinds of tuples, value conversion and array conversion. A tuple is an function arguments-ordered sequence of objects. Each object is a single key-value pair, specified with a `"value"`,`"type"` pair or an `"array"`,`"type"` pair. The value or array are valid Json values. The type is a language-specific type namepath, however, without arguments, simply a sequence of strings which make up the unique identifier of the function. 
+There are two kinds of tuples, value conversion and array conversion. A tuple is an function arguments-ordered sequence of objects. Each object is a single key-value pair, specified with a `"value"`,`"type"` pair or an `"array"`,`"type"` pair. The value or array are valid Json values. The type is a namepath, however, without arguments, simply a sequence of strings which make up the unique identifier of a one parameter function or a language-specific type. 
 
 ```json
-{"tuple": [ {"value": _, "type": ["namepathX", "language-specific type or class"]}, ...]}
-{"tuple": [ {"array": [_,_,_], "type": ["namepathY", "array-element-to-type conversion function"]}]}
+{"tuple": [ {"value": JsonValue, "type": ["namepathX", "language-specific type or class"]}, ...]}
+{"tuple": [ {"array": [JsonValue,JsonValue,JsonValue], "type": ["namepathY", "array-element-to-type conversion function"]}]}
 	or for convenience
 {"tuple": [ {"string_argument1": ["namepathZ", "string-to-type function_name"] }, {"string_argument1": ["namepathA", "requested-type"] } ]}
 
@@ -148,7 +152,7 @@ There are two kinds of tuples, value conversion and array conversion. A tuple is
 	"tuple": [ {"1": ["Long", "parseLong"]}, {"2": ["Long", "parseLong"]} ]
 }
 ```
-As a convenience, a compact form of tuple is allowed using a string value as the object key and the argument-free namepath. The namepath can be interpreted as a function which takes a string and returns a typed value. Or, the namepath is the requested language-specific type conversion. The default language-specific string-to-type operation will be requested, so this may fail at runtime.
+As a convenience, a compact form of tuple is allowed using a string value as the object key and the argument-free namepath. Obviously, the value cannot be the strings "value" or "array". The namepath can be interpreted as a one parameter function which takes a string and returns a typed value. Or, the namepath is the requested language-specific type conversion from the Json value. The default language-specific string-to-type operation will be requested, so this may fail at runtime.
 
 In the specific example above we created a 2 parameter tuple, each of type Long by specifying the argument value as a string key, and the type as a "namepath" of a function to convert the string to a Long. Again, a tuple is
 an array of single-field objects in function argument order. 
