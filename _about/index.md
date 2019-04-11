@@ -4,7 +4,7 @@ permalink: /about/index/
 ---
 
 kodou.io is a service for ondemand API calls to code in opensource or enterprise code bases. The service creates
-a library of functions extracted from existing code, even functions buried in a repository. 
+a library of functions extracted from existing code, even functions buried in a repository. Software from a range of programming languages is available. For example, if you are a Javascript programmer you can make API calls to  code in other languages used in with highly regarded repositories. 
 
 ## Usage
 

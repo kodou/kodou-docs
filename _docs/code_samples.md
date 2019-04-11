@@ -120,16 +120,16 @@ There are 3 ways to send arguments via the API. The differences are due to type 
 
 1. Protcol Buffer specification of arguments types in order.
 2. "args" field, an array of Json values.  
-3. "tuple" field, type specification of arguments via conversion functions.
+3. "tuple" field, type specification of arguments or, equivalently, conversion functions.
 
 A Protocol Buffer payload can be sent as arguments to a function call. 
 
-Json has a weak type specification that translates directly in some scripted languages (Python) but is
+Json has a weak type specification that translates automatically in some scripted languages (Python) but is
 problematic in richly-typed languages (Java). The `"args"` field is an array of Json values `{"args": [ 1 2 3 ]}` in function argument order. Use `"args"` when Json types are sufficient.
 
 Json values can be converted to language-specific typed arguments using the `"tuple"` specification. Each tuple specifies a raw value and either a language-specific type or a function that converts the value to a type, the function return type. A tuple is a set of typed arguments defined using an array of Json objects. We embed the specification in regular Json, that is the reason for the format.
 
-Currently, tuple cannot be used in a namepath. This will change in the future.
+Currently, tuple cannot be used in a namepath as an args alternative. This will change in the future.
 
 Generally, tuple is useful when you want to set the arguments types separately from the composition of functions that make up your code. Otherwise, you would have to include type conversion in your function compositions, muddying the meaning of your algorithms.
 
