@@ -4,7 +4,7 @@ permalink: /about/index/
 ---
 
 kodou.io is a service for ondemand API calls to code in opensource or enterprise code bases. The service creates
-a library of functions extracted from existing code, even functions buried in a repository. Software from a range of programming languages is available. For example, if you are a Javascript programmer you can make API calls to  code in other languages used in with highly regarded repositories. 
+a library of functions extracted from existing code, even functions buried in a repository. Software from a range of programming languages is available. For example, if you are a Javascript programmer you can make API calls to  code in other languages used in highly regarded repositories. 
 
 ## Usage
 
@@ -14,7 +14,7 @@ The API interface (https://api.kodou.io) allows programmable clients to setup an
 
 The clients make an API call to setup a function and then makes calls to the function with arguments. In the future the Setup stage may not be needed. 
 
-## Workflow
+## Workflow I
 
 The service requires no new skills or tooling from the client. The workflow is 
 1. Search for code
@@ -22,6 +22,10 @@ The service requires no new skills or tooling from the client. The workflow is
 3. Function is ready to be called via API
 
 If you already know what you want, simply send an API request for the code Environment, and the functions are ready to be called via API.
+
+## Workflow II
+
+kodou.io supports calling functions against a set of dependencies (Maven or Pypi, etc.) Simply send the list of dependencies and resources are provisioned per session id. Now function calls can be made on those dependencies and across dependencies.
 
 ## Advantages
 
