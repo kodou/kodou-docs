@@ -11,7 +11,7 @@ kodou.io has a web UI for user account management and to search for code. The us
 
 kodou.io is also used to call functions in a set of dependencies. This is called an "Environment". The user requests a list of desired dependencies (Maven, Pypi, etc.) and kodou.io provisions resources (an environment) to support function calls to those dependencies.
 
-Assuming the endpoint is `api.kodou.io`, the user will make calls against this endpoint using their API id stored in the HTTP header named X-Consumer-Custom-ID. This header must be used in all kodou API calls to identifiy the account.
+Assuming the endpoint is `api.kodou.io`, the user will make calls against this endpoint using their API id stored in the HTTP header named Authorization. This header must be used in all kodou API calls to identifiy the account.
 
 ### Setup call (ICE)
 
@@ -24,7 +24,7 @@ Using a url the user selected from a code search on the kodou.io web UI, the fol
 
 ```
 curl --request POST \
- --header 'X-Consumer-Custom-ID: {your API ID}' \
+ --header 'Authorization: Bearer {your API ID eyJhbGciOiJXXXXX....}' \
  --header "Content-Type: application/json" \
  --data '{"url":"https://github.com/antirez/redis.git|91685eeeb1462edfc12da2e079e76bdbeec0eddb|redis/src/sds.c|910|hex_digit_to_int"}' \
  https://api.kodou.io
@@ -42,15 +42,15 @@ The response will be a Json object with a `sessionid` field.
 
 2. Send a request to the `POST` https://api.kodou.io/library/call endpoint.
 
-The function calls will require the X-Consumer-Custom-ID header and a Json payload with the `sessionid` field, a `timeout` field, and an `args` field, a sub-object with the function arguments as fields. 
+The function calls will require the Authorization header and a Json payload with the `sessionid` field, a `timeout` field, and an `args` field, a sub-object with the function arguments as fields. 
 
 Protocol Buffers (PB) can be used for arguments as well with the https://api.kodou.io/library/callpb endpoint.
 
-The `sessionid` value serves as a proxy for the function url in the Setup phase. Call this function using the `library/call` API. The request includes the 'X-Consumer-Custom-ID' header, and a Json payload with the `sessionid`, a `timeout` value, and an object named `args` of the function arguments. In the example below, `...hex_digit_to_int` accepts one argument named `c` and returns an integer.
+The `sessionid` value serves as a proxy for the function url in the Setup phase. Call this function using the `library/call` API. The request includes the 'Authorization' header, and a Json payload with the `sessionid`, a `timeout` value, and an object named `args` of the function arguments. In the example below, `...hex_digit_to_int` accepts one argument named `c` and returns an integer.
 
 ```
 curl --request POST \
- --header 'X-Consumer-Custom-ID: {your API ID}' \
+ --header 'Authorization: Bearer {your API ID eyJhbGciOiJXXXXX....}' \
  --header "Content-Type: application/json" \
  --data '{"sessionid": {from the Setup call}, "timeout":"20000", "args":{"c": "A"}}'
  https://api.kodou.io
@@ -78,7 +78,7 @@ The following is a Setup call using `cURL` where the Google Guava dependency is 
 
 ```
 curl --request POST \
- --header 'X-Consumer-Custom-ID: {your API ID}' \
+ --header 'Authorization: Bearer {your API ID eyJhbGciOiJXXXXX....}' \
  --header "Content-Type: application/json" \
  --data '{ "dependencies": [{"groupId":"com.google.guava", "artifactId":"guava","version":"25.0-jre"}] }' \
  https://api.kodou.io
@@ -98,13 +98,13 @@ The response will be a Json object with a `sessionid` field.
 
 `kompose` is one of the commands of kodou.io. It supports composing function calls using constructs such as Pipes.
 
-The function calls will require the X-Consumer-Custom-ID header and a Json payload with the `sessionid` field, a `timeout` field, and other fields (see the other documentation). 
+The function calls will require the Authorization header and a Json payload with the `sessionid` field, a `timeout` field, and other fields (see the other documentation). 
 
-The `sessionid` value serves as a proxy for the resources in the Setup phase. The request includes the 'X-Consumer-Custom-ID' header, and a Json payload with the `sessionid`, a `timeout` value, and other objects, in this case named `pipeline`, of function composition. In the example below, `Double.valueOf( "1001.1" )` is Piped into another function `Double("101.1").compareTo`, returning the value -1 (int). Note, to simplify the example we used well-known Java functions. 
+The `sessionid` value serves as a proxy for the resources in the Setup phase. The request includes the 'Authorization' header, and a Json payload with the `sessionid`, a `timeout` value, and other objects, in this case named `pipeline`, of function composition. In the example below, `Double.valueOf( "1001.1" )` is Piped into another function `Double("101.1").compareTo`, returning the value -1 (int). Note, to simplify the example we used well-known Java functions. 
 
 ```
 curl --request POST \
- --header 'X-Consumer-Custom-ID: {your API ID}' \
+ --header 'Authorization: Bearer {your API ID eyJhbGciOiJXXXXX....}' \
  --header "Content-Type: application/json" \
  --data '{"sessionid": {from the Setup call}, "timeout":"20000", "pipeline": [
         [

@@ -10,7 +10,7 @@ permalink: /docs/mdreference/
 
 #### Headers
 
-X-Consumer-Custom-ID: {your API ID}
+Authorization: Bearer {your API ID}
 
 #### Parameters
 
@@ -27,7 +27,7 @@ None
 
 ```
 curl --request POST \
- --header 'X-Consumer-Custom-ID: {your API ID}' \
+ --header 'Authorization: Bearer {your API ID}' \
  --header "Content-Type: application/json" \
  --data '{"url":"https://github.com/antirez/redis.git|91685eeeb1462edfc12da2e079e76bdbeec0eddb|redis/src/sds.c|910|hex_digit_to_int"}' \
  https://api.kodou.io
@@ -60,7 +60,7 @@ Code | Message | Meaning
 
 #### Headers
 
-X-Consumer-Custom-ID: {your API ID}
+Authorization: Bearer {your API ID}
 
 #### Parameters
 
@@ -70,7 +70,7 @@ None
 
 ```
 curl --request POST \
- --header 'X-Consumer-Custom-ID: {your API ID}' \
+ --header 'Authorization: Bearer {your API ID}' \
  --header "Content-Type: application/json" \
  --data '{"sessionid": {from the Setup call}, "timeout":"20000", "args":{"c": "A"}}'
  https://api.kodou.io
@@ -108,7 +108,7 @@ Code | Message | Meaning
 
 #### Headers
 
-X-Consumer-Custom-ID: {your API ID}
+Authorization: Bearer {your API ID}
 
 #### Parameters
 
@@ -118,7 +118,7 @@ None
 
 ```
 curl --request POST \
- --header 'X-Consumer-Custom-ID: {your API ID}' \
+ --header 'Authorization: Bearer {your API ID}' \
  --header "Content-Type: application/json" \
  --data '{"sessionid": {from the Setup call}, "timeout":"20000", "argspb":{Base64 encoded String Protobufs arguments}}}'
  https://api.kodou.io

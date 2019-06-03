@@ -44,12 +44,13 @@ Every function called must be exported by a library in the dependency set, aka. 
 ### Environment Setup
 For all calls the default endpoint, api.kodoi.io, is assumed.
 
-You need to provide your API id, supplied by kodou.io, as a custom field, X-Consumer-Custom-ID. Json payloads are used for the protocol's data. The examples in this section can be used with PostMan.
+You need to provide your API id (it looks like eyJhbGciOiJXXXXX....), supplied by kodou.io, as a field, `Authorization: Bearer eyJhbGciOiJXXXXX....`. Json payloads are used for the protocol's data. The examples in this section can be used with PostMan.
 
 Below, set up a Python 3 environment with a set of Python packages available on pypi.org.
 ```
 POST /environment/python/setup 
-X-Consumer-Custom-ID:XXXXXXXXXX 
+Authorization: Bearer eyJhbGciOiJXXXXX....
+Content-Type: application/json; charset=utf-8  
 {
 	"version": "3",
 	"dependencies": ["numpy", "requests", ...]
@@ -81,7 +82,7 @@ Finally, we provide a shortcut for static method calls, i.e., no arguments in th
 ```
 
 ### Environment Function Call
-The Setup call, if successful, will return a Json object with a "sessionid" token field. To make a function call, use the "/environment/python/call" path, the "X-Consumer-Custom-ID" header is also required. The function call is defined by the Json payload, including the "sessionid", function arguments, and other fields.
+The Setup call, if successful, will return a Json object with a "sessionid" token field. To make a function call, use the "/environment/python/call" path, the "Authorization" header is also required. The function call is defined by the Json payload, including the "sessionid", function arguments, and other fields.
 
 A function name is expressed explicitly as a "namepath" which represents the usual dot-separated class attribute expression found in code. All function "namepaths" must include the toplevel/module name followed by a class and/or sequence of function names. Optional arguments can be included in the case of object construction or intermediate function calls.
 ```json
@@ -97,7 +98,7 @@ A function name is expressed explicitly as a "namepath" which represents the usu
 For example, below we want to sum an array of values with the desired function `numpy.array(xxxxx).sum()`:
 ```http
 POST /environment/python/call HTTPS/1.1
-X-Consumer-Custom-ID: XXXXXXXXXX
+Authorization: Bearer eyJhbGciOiJXXXXX....
 Content-Type: application/json; charset=utf-8  
 
 {
@@ -267,7 +268,7 @@ import requests
 setup_url = 'https://api.kodou.io/environment/python/setup'
 call_url = 'https://api.kodou.io/environment/python/call'
 
-id_header = {"X-Consumer-Custom-ID":"XXXXXXXXXX"}
+id_header = {"Authorization":"Bearer XXXXXXXXXX"}
 
 # setup a kodou.io Environment with numpy
 setup_json = {"version":"3", dependencies:["numpy"]}
@@ -311,18 +312,18 @@ Currently, we require a Setup call before a kodou.io function is called. In the 
 
 ```
 POST /libray/setup 
-X-Consumer-Custom-ID:XXXXXXXXXX 
+Authorization: Bearer eyJhbGciOiJXXXXX....
 {
 	"url": "https://github.com/antirez/redis.git|91685eeeb1462edfc12da2e079e76bdbeec0eddb|redis/src/sds.c|910|hex_digit_to_int"
 }
 ```
 
 ### Function Call w/ Arguments
-The Setup call, if successful, will return a Json object with a "sessionid" token field. (i.e.,"sessionid": "eyJ0eXXXXXXXXXX"). The "X-Consumer-Custom-ID" header is also required to use the "library/call" path. The "sessionid", function arguments, and other fields are put in the Json payload.
+The Setup call, if successful, will return a Json object with a "sessionid" token field. (i.e.,"sessionid": "eyJ0eXXXXXXXXXX"). The "Authorization" header is also required to use the "library/call" path. The "sessionid", function arguments, and other fields are put in the Json payload.
 
 ```
 POST /library/call 
-X-Consumer-Custom-ID:XXXXXXXXXX 
+Authorization: Bearer eyJhbGciOiJXXXXX....
 {
     "sessionid": "eyJ0eXXXXXXXXXX",
     "timeout":"20000",
@@ -349,7 +350,7 @@ The response will be a Json object with the error state and function return valu
 
 ```
 curl --request POST \
- --header 'X-Consumer-Custom-ID: {your API ID}' \
+ --header 'Authorization: Bearer {your API ID eyJhbGciOiJXXXXX....}' \
  --header "Content-Type: application/json" \
  --data '{"url":"https://github.com/antirez/redis.git|91685eeeb1462edfc12da2e079e76bdbeec0eddb|redis/src/sds.c|910|hex_digit_to_int"}' \
  https://api.kodou.io
@@ -366,7 +367,7 @@ The response will be a Json object with a `sessionid` field.
 
 ```
 curl --request POST \
- --header 'X-Consumer-Custom-ID: {your API ID}' \
+ --header 'Authorization: Bearer {your API ID eyJhbGciOiJXXXXX....}' \
  --header "Content-Type: application/json" \
  --data '{"sessionid": {from the Setup call}, "timeout":"20000", "args":{"c": "A"}}'
  https://api.kodou.io
@@ -395,7 +396,7 @@ var callerror = false;
 axios({
 	method: 'post',
 	url: 'https://api.kodou.io/library/setup',
-	headers: {'X-Consumer-Custom-ID': 'your API ID' },
+	headers: {'Authorization': 'Bearer {your API ID eyJhbGciOiJXXXXX....}' },
 	data: {
 		url: 'https://github.com/antirez/redis.git|91685eeeb1462edfc12da2e079e76bdbeec0eddb|redis/src/sds.c|910|hex_digit_to_int'
 	}
@@ -416,7 +417,7 @@ function(sessionid,argumentDict,timeout) { # argumentDict is dictionary with par
 	axios({
 		method: 'post',
 		url: 'https://api.kodou.io/library/setup',
-		headers: {'X-Consumer-Custom-ID': 'your API ID' },
+		headers: {'Authorization': 'Bearer {your API ID eyJhbGciOiJXXXXX....}' },
 		data: payload
 		}).then(function (response) {
 			if (response.json().return.error)
@@ -434,7 +435,7 @@ function(sessionid,argumentDict,timeout) { # argumentDict is dictionary with par
 import requests
 
 url = 'https://api.kodou.io/library/setup'
-headers = {'X-Consumer-Custom-ID': 'your API ID' }
+headers = {'Authorization': 'Bearer {your API ID eyJhbGciOiJXXXXX....}' }
 payload = {url: 'https://github.com/antirez/redis.git|91685eeeb1462edfc12da2e079e76bdbeec0eddb|redis/src/sds.c|910|hex_digit_to_int'}
 
 resp = requests.post(url, headers=headers, data=payload)
@@ -456,7 +457,7 @@ import requests
 
 def kodou_call(api_id, sessionid, argumentDict): # argumentDict is dictionary with parameter names as keys and arguments as values
 	url = 'https://api.kodou.io/library/call'
-	headers = {'X-Consumer-Custom-ID': api_id }
+	headers = {'Authorization': 'Bearer {your API ID eyJhbGciOiJXXXXX....}'}
 	payload = {'sessionid':sessionid, 'args':argumentDict}
 
 	resp = requests.post(url, headers=headers, data=payload)
