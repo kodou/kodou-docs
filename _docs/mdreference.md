@@ -3,6 +3,13 @@ title: Reference example
 permalink: /docs/mdreference/
 ---
 
+### API access information
+
+Keys and tokens are found on the API page. The JWT key is used for authentication as your API ID. The Endpont Address is usually https://kodou.io
+
+![Example API tokens page](/img/screencapture-kodou-io-2019-06-26-12_05_03.png "API tokens")
+
+
 ### Setup a kodou function by url reference
 
 
