@@ -41,3 +41,4 @@ All API requests must have the key/token as a header named `Authorization`. The 
 Some kodou.io API calls produce a session ID, a JWT token, to be used in subsequent calls. This token encodes
 the state needed to authenticate the configuration specificied in the original call. The session ID is sent in a `POST` JSON payload.
 
+! (/img/screencapture-kodou-io-2019-06-26-12_05_03.png "API tokens")
