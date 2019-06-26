@@ -8,8 +8,8 @@ permalink: /docs/code_samples/
 kodou.io is designed to be a minimal protocol for clients. The client either requests a specific function, known as an isolated code executable (ICE), or specifies a set of dependencies to be available in an "Environment" for a variety of function calls exported by the dependencies.
 
 Thus, there are two kinds of API services: 
-+ Functions (ICE)
 + Environments
++ Functions (ICE)
 
 The following are a few examples in different languages and approaches. 
 
