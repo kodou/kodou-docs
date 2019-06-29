@@ -41,7 +41,7 @@ All API requests must have the key/token as a header named `Authorization`. The 
 For each account the API keys/tokens and the API Endpoint Address are displayed like the image below. Copy these values for use in your API calls. Look further in the documentation for how to use the JWT key/token for authentication. 
 
 Usually the API Endpoint Address is https://kodou.io. 
-![Example API tokens page](/img/screencapture-kodou-io-2019-06-26.png "API tokens")
+![Example API tokens page](/img/screencapture-kodou-io-api.png "API tokens")
 
 Some kodou.io API calls produce a session ID, a JWT token, to be used in subsequent calls. This token encodes
 the state needed to authenticate the configuration specificied in the original call. The session ID is sent in a `POST` JSON payload.
