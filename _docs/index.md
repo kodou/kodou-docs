@@ -34,15 +34,15 @@ The base URL is api.kodou.io unless otherwise specified. Each user is rate limit
 
 ## Authentication
 
-To make API calls you use the kodou.io web UI to set up your account to use either a key or a JWT token. Copy the key/token displayed in the UI and apply it to API https requests. Please keep this key/token private as it represent your account without need for further evidence. Don't share it with other users, and make sure to remove it from any code samples. Tokens can be refreshed with the token refresh button on the kodou.io web UI. Changing the API key will require a call to Customer Support.
+To make API calls you use the kodou.io web UI to set up your account to receive a key (a JWT token). Copy the key/token displayed in the UI and apply it to API https requests as a parameter named `api_id` or a header `Authorization: Bearer XXXXX`. Please keep this key/token private as it represent your account without need for further evidence. Don't share it with other users, and make sure to remove it from any code samples.
 
-All API requests must have the key/token as a header named `Authorization`. The API key or JWT token expiration is account dependent. 
+All API requests must have either the `api_id` parameter key or the header `Authorization: Bearer XXXX`. The API ID expiration is account dependent. 
 
-For each account the API keys/tokens and the API Endpoint Address are displayed like the image below. Copy these values for use in your API calls. Look further in the documentation for how to use the JWT key/token for authentication. 
+For each account the API key and the API Endpoint Address are displayed like the image below. Copy these values for use in your API calls. Look further in the documentation for examples on how to use the JWT key/token for authentication. 
 
 Usually the API Endpoint Address is https://kodou.io. 
 ![Example API tokens page](/img/screencapture-kodou-io-api.png "API tokens")
 
 Some kodou.io API calls produce a session ID, a JWT token, to be used in subsequent calls. This token encodes
-the state needed to authenticate the configuration specificied in the original call. The session ID is sent in a `POST` JSON payload.
+the state needed the configuration specified in the original call. The session ID is sent in a `POST` JSON payload.
 

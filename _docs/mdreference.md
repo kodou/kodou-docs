@@ -3,25 +3,79 @@ title: Reference example
 permalink: /docs/mdreference/
 ---
 
-### API access information
+### API information
 
-Keys and tokens are found on the API page. The JWT key is used for authentication as your API ID. The Endpont Address is usually https://kodou.io
+Keys are found on the www.kodou.io API page. The JWT key is used for authentication as your API ID. The Endpont Address is usually https://kodou.io . 
+
+The API ID can be used as an http parameter, so a url without a path looks like https://kodou.io?api_id=eyJhbGciOiJIUzI1NiIsInRXXXXXXXXXXXXXXX
+Or the API ID can be supplied as a Bearer Token, `Authorization: Bearer ejxcXXXXXXXX`
+
+Examples below use the header authentication to keep the url clear.
 
 ![Example API tokens page](/img/screencapture-kodou-io-api.png "API tokens")
 
+### Setup a Python Environment
 
-### Setup a kodou function by url reference
+### `POST /environment/python/setup`
 
-
-#### `POST https://api.kodou.io/library/setup` 
-
-#### Headers
+#### Headers authentication (or Parameters)
 
 Authorization: Bearer {your API ID}
 
-#### Parameters
+#### Parameters authentication (or Headers)
 
-None
+api_id={your API ID} 
+
+### Json payload
+```
+{
+    "version": _  ,  // String number like "3"
+    "dependencies": [  _ ,  _ , ...] // Strings
+}
+```
+### Example Response to Setup
+```
+{
+    "sessionid": "eyJ0eXAiO..."
+}
+```
+
+### Example Request
+```
+curl -XPOST \
+ -H 'Authorization: Bearer {your API ID}' \
+ -H 'Content-Type: application/json' \
+ -d '{"sessionid": "eyJ0eXAi.....",
+  "timeout": _,
+  "namepath": [
+        {"moduleName": _}, // String
+        {"name": "array","args": [ _, ... ]}, // String or other Json types
+        {"name": _ } 
+        ],
+  "args": [ -, ...]}'
+```
+
+### Example Response
+```
+{
+    "return": {
+        "error": _, // true or false
+        "value": _
+    }
+}
+```
+
+### Setup a kodou function by url reference
+
+#### `POST https://api.kodou.io/library/setup` 
+
+#### Headers authentication (or Parameters)
+
+Authorization: Bearer {your API ID}
+
+#### Parameters authentication (or Headers)
+
+api_id={your API ID} 
 
 #### JSON payload
 ```
