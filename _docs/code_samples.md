@@ -96,7 +96,7 @@ A function name is expressed explicitly as a "namepath" which represents the usu
 }
 ```
 For example, below we want to sum an array of values with the desired function `numpy.array(xxxxx).sum()`:
-```http
+```https
 POST /environment/python/call HTTPS/1.1
 Authorization: Bearer eyJhbGciOiJXXXXX....
 Content-Type: application/json; charset=utf-8  

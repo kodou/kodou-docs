@@ -8,6 +8,7 @@ permalink: /docs/mdreference/
 Keys are found on the www.kodou.io API page. The JWT key is used for authentication as your API ID. The Endpont Address is usually https://kodou.io . 
 
 The API ID can be used as an http parameter, so a url without a path looks like https://kodou.io?api_id=eyJhbGciOiJIUzI1NiIsInRXXXXXXXXXXXXXXX
+
 Or the API ID can be supplied as a Bearer Token, `Authorization: Bearer ejxcXXXXXXXX`
 
 Examples below use the header authentication to keep the url clear.
@@ -29,8 +30,8 @@ api_id={your API ID}
 ### Json payload
 ```
 {
-    "version": _  ,  // String number like "3"
-    "dependencies": [  _ ,  _ , ...] // Strings
+    "version": "_"  , 
+    "dependencies": [  "_" ,  "_" , ...] 
 }
 ```
 ### Example Response to Setup
@@ -59,8 +60,8 @@ curl -XPOST \
 ```
 {
     "return": {
-        "error": _, // true or false
-        "value": _
+        "error": false, 
+        "value": "_"
     }
 }
 ```
