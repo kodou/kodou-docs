@@ -15,7 +15,7 @@ Examples below use the header authentication to keep the url clear.
 
 ![Example API tokens page](/img/screencapture-kodou-io-api.png "API tokens")
 
-### Setup a Python Environment
+### Set up a Python Environment
 
 ### `POST /environment/python/setup`
 
@@ -27,21 +27,21 @@ Authorization: Bearer {your API ID}
 
 api_id={your API ID} 
 
-### Json payload
+### Json payload of version and Pip package names dependencies
 ```
 {
     "version": "_"  , 
     "dependencies": [  "_" ,  "_" , ...] 
 }
 ```
-### Example Response to Setup
+### Example response to setup
 ```
 {
     "sessionid": "eyJ0eXAiO..."
 }
 ```
 
-### Example Request
+### Example call to a Python function in a module
 ```
 curl -XPOST \
  -H 'Authorization: Bearer {your API ID}' \
@@ -56,7 +56,7 @@ curl -XPOST \
   "args": [ -, ...]}'
 ```
 
-### Example Response
+### Example response
 ```
 {
     "return": {
@@ -64,6 +64,45 @@ curl -XPOST \
         "value": "_"
     }
 }
+```
+
+### Set up a Java/Maven Environment
+
+### `POST /environment/java/setup`
+
+#### Headers authentication (or Parameters)
+
+Authorization: Bearer {your API ID}
+
+#### Parameters authentication (or Headers)
+
+api_id={your API ID} 
+
+### Json payload of Maven package coordinates
+```
+{
+    "dependencies": [ {"groupId": "_", "artifactId": "_", "version": "_"}, {"groupId": "_", "artifactId": "_", "version": "_"}, ... ] 
+}
+```
+### Example response to setup
+```
+{
+    "sessionid": "eyJ0eXAiO..."
+}
+```
+
+### Samples of Environment calls for Java or Python
+
+```
+    "args" : [ json, json ] the json must resolve to a type supported by the function [Java unlikely to work auto, Number, ArrayList, Boolean]
+    "argspb" : [ "Base64Value", "Base64Value" ] 
+    "argsnamepb" : {"arg1name": Base64Value, "arg2name": Base64Value }  
+    "tuple" : [ {"value": _, "type": ["AName", "jsonToInteger"]} ]
+    "tuple" : [ {"array": [_, _, _], "type": ["AName", "jsonArrayElementToInteger"]} ]
+    "tuple" : [ {"1" : ["moduleNameX", "stringToType"]}, {,} ]
+    "namepath" : [{"moduleName":"moduleNameX"}, {"name":"classNameX","args":["optionalX","argumentX","listX"]},   
+        {"name":"functionNameX or __init__", "tuple":[{"optionalX":["",""], "argumentX"]}]
+    "namepath" : ["moduleNameX", "classNameX", "functionNameX", ..]
 ```
 
 ### Setup a kodou function by url reference
