@@ -13,7 +13,15 @@ layout: default
 <div class="container">
     <div class="row">
       <div class="col-md-6">
-        <h2 class="header-light regular-pad">Instant Functions Service</h2>
+
+        <h2 lass="header-light regular-pad"> Services</h2>
+        <p>Kodou provides two main services that change and simplify software development.</p>
+        <ul>
+          <li>Instant Functions</li>
+          <li>Dependency Service</li>
+        </ul>
+        
+        <h3 class="header-light regular-pad">Instant Functions Service</h3>
           <p>The code you want to write today has probably been written 100x already, buried somewhere in your enterprise code base or an opensource repository. Why start a new code design process and subsequent development cycles when the solutions exist somewhere? Using existing code has many advantages over writing new code including time/cost savings, quality, and broader creative options.</p> <p>kodou.io brings amazing advantages. It finds, reveals, and makes usable code buried within applications, and the code is ready (Instant Functions) to run via an API call. The software development workflow is simple:</p>
           <ul>
               <li>Search for code</li>
@@ -26,7 +34,11 @@ layout: default
           The kodou.io service includes the runtime servers for code execution. </p>
           
       </div>
+
       <div class="col-md-6">
+        <h3 class="header-light regular-pad">Dependency Service</h3>
+        <p>Dependencies are necessary components to an application. For example, Maven dependency lists specify the classes and resources needed for a Java application. Kodou provides an API to request a session with a list of required dependencies, and returns a token. With the session token, you can call any function found in those dependencies. With multiple session tokens you can make function calls across independent dependency environments. This solves the well known dependency conflict problem.</p>
+
         <h2 class="header-light regular-pad">Software as a Service + Financial Asset</h2>
         <p class="header-light regular-pad">Software engineers can quickly exploit the kodou.io service for faster product shipping, rapid protoyping of new ideas, expanded software solution options, and higher quality code. They already know how to use this intuitive service. It can separate corporate and opensource repositories and prioritize as requested. It enables them to discover and reuse their colleague's software output, and uncover opensource resources.</p>
         <p>Management will bring the view of product time-to-market, financial investments, assets, and budgets. kodou.io also serves as a tool to optimize these financial factors. It reduces the software development cycle which leads to shorter time-to-market. It allows engineers to discover valuable exisiting enterprise software code for reuse, reducing engineering time/cost.</p> <p>kodou.io reveals a huge financial asset that may be missing from the balance sheet, the enterprise's valuable software. The high cost to create and mainatain software is always a part of budgets. kodou.io can serve as a tool to turn software into an executable code service. It is a big management win to put some of that software value on the asset side of financial reports.</p>
@@ -37,17 +49,17 @@ layout: default
         <div class="col-sm-4">
             <h1 class="text-center"><i class="fa fa-map" aria-hidden="true"></i></h1>
             <h3 class="text-center">Workflows</h3>
-            <p>These optimal <a href="/mvd-template/docs/workflows/">workflows</a> walk you through a few high-impact tasks you can accomplish with your API.</p>
+            <p>These optimal <a href="{{ "/docs/workflows/" | prepend: site.baseurl }}">workflows</a> walk you through a few high-impact tasks you can accomplish with your API.</p>
         </div>
         <div class="col-sm-4">
             <h1 class="text-center"><i class="fa fa-code" aria-hidden="true"></i></h1>
             <h3 class="text-center">Code Samples</h3>
-            <p>Check out these <a href="/mvd-template/docs/code_samples/">code samples</a> for common use cases to get up and running with the API as quickly as possible.</p>
+            <p>Check out these <a href="{{ "/docs/code_samples/" | prepend: site.baseurl }}">code samples</a> for common use cases to get up and running with the API as quickly as possible.</p>
         </div>
         <div class="col-sm-4">
             <h1 class="text-center"><i class="fa fa-rocket" aria-hidden="true"></i></h1>
             <h3 class="text-center">Reference</h3>
-            <p>Looking for endpoints? The <a href="/mvd-template/docs/mdreference/">reference</a> section lists details for every endpoint in the API.</p>
+            <p>Looking for endpoints? The <a href="{{ "/docs/mdreference/" | prepend: site.baseurl }}">reference</a> section lists details for every endpoint in the API.</p>
         </div>
     </div>
 </div>
